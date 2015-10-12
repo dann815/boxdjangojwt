@@ -3,7 +3,6 @@
 ### Step 0: Pull code  
 git clone https://github.com/dann815/boxdjangojwt.git 
 
-Box Python SDK: https://github.com/box/box-python-sdk  
 ### Step 1: Install packages
 python 2.7.10  
 django 1.8  
@@ -27,3 +26,6 @@ export BOX_SDK_EID=123456
 ### Step 5: Run the code  
 python manage.py runserver  
 Navigate to http://localhost:8000/box/  
+
+#### Box SDK can be found at
+https://github.com/box/box-python-sdk  
