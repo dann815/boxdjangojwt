@@ -1,6 +1,7 @@
 # boxdjangojwt
 
-### Step 0: Pull code
+### Step 0: Pull code  
+git clone https://github.com/dann815/boxdjangojwt.git 
 
 Box Python SDK: https://github.com/box/box-python-sdk  
 ### Step 1: Install packages
