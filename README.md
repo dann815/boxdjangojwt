@@ -1,13 +1,13 @@
 # boxdjangojwt
 
+### Step 0: Pull code
+
 Box Python SDK: https://github.com/box/box-python-sdk  
-### Step 1: Install packages OR use the provided /venv  
+### Step 1: Install packages
 python 2.7.10  
 django 1.8  
 pip install boxsdk  
 pip install boxsdk[jwt]  
-##### OR use the included requirements.txt to run:  
-virtualenv --no-site-packages --distribute venv && source venv/bin/activate && pip install -r requirements.txt  
 
 ### Step 2: Generate your RSA keys  
 openssl genrsa -out rsakey.pem 2048  
