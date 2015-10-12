@@ -1,0 +1,14 @@
+{% load staticfiles %}
+
+<link rel="stylesheet" type="text/css" href="{% static 'box/style.css' %}" />
+
+{% if users_list %}
+    <h1>App Users:</h1>
+    <ul>
+    {% for user in users_list %}
+        <li>{{ user.name }}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No users have been created.</p>
+{% endif %}
