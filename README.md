@@ -4,7 +4,7 @@
 git clone https://github.com/dann815/boxdjangojwt.git 
 
 ### Step 1: Install packages
-python 2.7.10  
+python 2.7.10  **Note: Does not work with 3.x**  
 django 1.8  
 pip install boxsdk  
 pip install boxsdk[jwt]  
