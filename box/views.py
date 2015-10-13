@@ -42,7 +42,7 @@ def listUsersWorkaround(client):
 
 
 ### Called by the authentication method.
-def _store_tokens(access_t, refresh_t):
+def store_tokens(access_t, refresh_t):
     global access_token, refresh_token
     access_token=access_t
     refresh_token=refresh_t
@@ -76,7 +76,7 @@ def index(request):
         client_secret=client_secret,
         enterprise_id=eid,
         rsa_private_key_file_sys_path=os.path.join(os.path.dirname(__file__),'rsakey.pem'),
-        store_tokens=_store_tokens)
+        store_tokens=store_tokens)
 
     ### This SDK allows for a custom network object. The one used here logs all calls to STDOUT
     clientObject = Client(authObject, network_layer=logging_network.LoggingNetwork())
