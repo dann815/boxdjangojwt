@@ -1,4 +1,7 @@
-# boxdjangojwt
+# boxdjangojwt  
+Read the comments in the code.  They will help :)  
+Everything important is at /box/views.py  
+
 
 ### Step 0: Pull code  
 git clone https://github.com/dann815/boxdjangojwt.git 
