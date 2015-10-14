@@ -23,6 +23,7 @@ eid = os.environ.get('BOX_SDK_EID') # Enterprise ID number
 global access_token
 global refresh_token
 
+# These will be used to refresh the token if needed
 global authObject
 global clientObject
 
@@ -72,15 +73,19 @@ def index(request):
     #
     # Note: JWT does not use refresh tokens
     ###
+    global authObject
     authObject = JWTAuth(client_id=client_id,
         client_secret=client_secret,
         enterprise_id=eid,
         rsa_private_key_file_sys_path=os.path.join(os.path.dirname(__file__),'rsakey.pem'),
         store_tokens=store_tokens)
 
-    ### This SDK allows for a custom network object. The one used here logs all calls to STDOUT
+    ### This SDK allows for a custom network object.
+    ### The one used here logs all calls to STDOUT.
+    ### If you don't want the logging, use the line after it.
+    global clientObject
     clientObject = Client(authObject, network_layer=logging_network.LoggingNetwork())
-    # client = Client(auth)
+    # clientObject = Client(authObject)
 
     ### Returns the user object for the developer account.
     ### Will error if the scope is not set to All Users.
@@ -95,14 +100,18 @@ def index(request):
 
     context={
         "users_list":listUsersWorkaround(clientObject)
+        ### If you get an error about response.entries
+        ### either change the scope of the app in Box
+        ### or use this line instead:
+        # "users_list":clientObject.users()
     }
-    return render(request, "box/index.html", context)
+    return render(request, "box/index.html", context) ### Pulls from static/box/
 
-
+### NOT COMPLETE
 def OAuth(request):
     return HttpResponseRedirect(request)
 
-
+### NOT COMPLETE
 def deleteAll(request):
     ### DANGER: CANNOT BE UNDONE
     # print "Delete all App Users"
