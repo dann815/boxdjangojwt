@@ -17,7 +17,7 @@ openssl genrsa -out rsakey.pem 2048
 openssl rsa -pubout -in rsakey.pem -out rsapublic.pem  
 
 ### Step 3: Input your RSA keys  
-cat rsapublic.pem | pbcopy
+cat rsapublic.pem | pbcopy  
 Add the public key to your app at developers.box.com  
 Put the private key in your project folder at /box/rsakey.pem  
 
@@ -33,3 +33,5 @@ Navigate to http://localhost:8000/box/
 
 #### Box SDK can be found at
 https://github.com/box/box-python-sdk  
+
+Contact: DanK@box.com
