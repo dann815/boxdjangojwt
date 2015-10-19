@@ -30,9 +30,16 @@ export BOX_SDK_EID=123456
 ### Step 5: Run the code  
 python manage.py runserver  
 Navigate to 
-<http://localhost:8000/box/> or <http://localhost:8000>
-
-#### Box SDK can be found at
+<http://localhost:8000/box/> or <http://localhost:8000>  
+  
+  
+  
+Contact: DanK@box.com  
+  
+  
+  
+#### Box SDK can be found at:  
 https://github.com/box/box-python-sdk  
 
-Contact: DanK@box.com
+#### Django Tutorial:  
+https://docs.djangoproject.com/en/1.8/intro/tutorial01/  
