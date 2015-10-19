@@ -18,7 +18,7 @@ openssl rsa -pubout -in rsakey.pem -out rsapublic.pem
 
 ### Step 3: Input your RSA keys  
 cat rsapublic.pem | pbcopy  
-Add the public key to your app at developers.box.com  
+Add the public key to your app at https://developers.box.com/ 
 Put the private key in your project folder at /box/rsakey.pem  
 
 ### Step 4: Set environment variables  
@@ -29,7 +29,7 @@ export BOX_SDK_EID=123456
 
 ### Step 5: Run the code  
 python manage.py runserver  
-Navigate to http://localhost:8000/box/  
+Navigate to http://localhost:8000/box/ or http://localhost:8000  
 
 #### Box SDK can be found at
 https://github.com/box/box-python-sdk  
