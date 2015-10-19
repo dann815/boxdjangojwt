@@ -5,6 +5,10 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
 
 {% if user %}
+    <input type=button value="Previous Page" onClick="javascript:history.go(-1);">
+
+    
+
     <h1>Name: {{ user.name }}</h1>
 
     <h4>Attributes:</h4>
