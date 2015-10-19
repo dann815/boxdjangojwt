@@ -1,4 +1,5 @@
 import os
+from django.core.urlresolvers import reverse
 
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
@@ -32,6 +33,7 @@ def listAllUsers(client):
 #
 ###
 def index(request):
+    print 'Sending index view'
     initializeClientAndAuthObjects()
 
     ### Use this to create users (for now)
@@ -44,30 +46,64 @@ def index(request):
 
 
 def detail(request, user_id):
+    print 'Sending detail view'
     initializeClientAndAuthObjects()
 
     u = jwtAuth.clientObject.user(user_id=user_id).get() # Create a user object
-    user_token = jwtAuth.authObject.authenticate_app_user(u) # Auth with that user
+    print "AUTHENTICATING AS USER: " + user_id + " (" + u.name + ")"
+    user_token = jwtAuth.authObject.authenticate_app_user(u) # *****  Auth with that user to create folders ******
     user_client = Client(jwtAuth.authObject) # Create a new client for that user
 
     me = user_client.user(user_id='me').get() # Get the user's info
-    print 'Sending detail view for: ' + me['name']
 
-    # print 'user login: ' + me['login']
+    ###
+    ### Extra code for the detail view goes here
+    ###
+
+    ### Authenticate as the admin again
+    print "AUTHENTICATING BACK TO ADMIN"
+    jwtAuth.authObject.authenticate_instance()
 
     context = {
-        "user": jwtAuth.clientObject.user(user_id=user_id).get(),
+        "user": jwtAuth.clientObject.user(user_id=user_id).get(), # Send the entire user json response
         "token": user_token
     }
     return render(request, "box/detail.html", context)
 
+#TODO
+###
+### Change to a form
+###
+def createUser(request, new_user_name):
+    print 'Creating user'
+    initializeClientAndAuthObjects()
 
-### NOT COMPLETE
+    u = jwtAuth.clientObject.create_user(name=new_user_name)
+
+    ###
+    ### Initialization scripts go here
+    ###
+
+
+
+    return HttpResponseRedirect(reverse('box:detail', args=[u.id]))
+
+
+def deleteUser(request, user_id):
+    initializeClientAndAuthObjects()
+
+    u = jwtAuth.clientObject.user(user_id=user_id).get()
+    u.delete()
+
+    return
+
+
+### CAREFUL WITH USAGE:
 def deleteAll(request):
     ### DANGER: CANNOT BE UNDONE
     # print "Delete all App Users"
-    for u in clientObject.users():
-        print u.delete()
+    # for u in clientObject.users():
+    #     print u.delete()
     return HttpResponse("Uncomment the code first.")
 
 
