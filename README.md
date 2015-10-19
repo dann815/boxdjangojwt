@@ -29,7 +29,8 @@ export BOX_SDK_EID=123456
 
 ### Step 5: Run the code  
 python manage.py runserver  
-Navigate to http://localhost:8000/box/ or http://localhost:8000  
+Navigate to 
+<http://localhost:8000/box/> or <http://localhost:8000>
 
 #### Box SDK can be found at
 https://github.com/box/box-python-sdk  
