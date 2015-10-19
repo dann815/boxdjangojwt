@@ -3,11 +3,11 @@ import os
 from django.shortcuts import render
 from django.http import HttpResponse, HttpResponseRedirect
 
-from boxsdk import Client, JWTAuth
 from boxsdk.config import API
 from boxsdk.object.user import User
+from box import jwtAuth
 
-import logging_network # Custom logger for use with Client
+from jwtAuth import *
 
 ###
 # Edit your ~/.bash_profile to include the following lines with your values
@@ -15,45 +15,14 @@ import logging_network # Custom logger for use with Client
 #   export BOX_SDK_CLIENTSECRET=ABCDEFGHI1234
 #   export BOX_SDK_EID=123456
 ###
-client_id = os.environ.get('BOX_SDK_CLIENTID') # Your Client ID
-client_secret = os.environ.get('BOX_SDK_CLIENTSECRET') # Your Client Secret
-eid = os.environ.get('BOX_SDK_EID') # Enterprise ID number
+# global client_id, client_secret, eid
 
-# These will be set on Authentication
-global access_token
-global refresh_token
-
-# These will be used to refresh the token if needed
-global authObject
-global clientObject
-
-###
-#  The API seems to have changed so I had to write a workaround to get the list of app users.
-#
-# Edit: This is probably a bug.  The response format changes based on the settings at:
-#   Box -> Admin Console -> Apps -> Custom Applications -> Actions -> Edit App
-#
-# This  is a good example of how to make calls directly to the API once authenticated
-###
-def listUsersWorkaround(client):
+### Example of how to make calls directly to the API after authentication
+def listAllUsers(client):
     url = '{0}/users'.format(API.BASE_API_URL)
     box_response = client.make_request('GET', url)
     response = box_response.json()
-    return [User(client._session, item['id'], item) for item in response['entries'].values()]
-
-
-### Called by the authentication method.
-def store_tokens(access_t, refresh_t):
-    global access_token, refresh_token
-    access_token=access_t
-    refresh_token=refresh_t
-
-    ### The SDK is supposed to refresh the token if/when it expires.
-    ### This token will work for testing with PostMan or curl or others
-    print "Access Token: {0}".format(access_token)
-    ### JWT does not have refresh tokens.  This will be the Python type 'None'
-    print "Refresh Token: {0}".format(refresh_token)
-    return
+    return [User(client._session, item['id'], item) for item in response['entries']]
 
 
 ###
@@ -61,62 +30,47 @@ def store_tokens(access_t, refresh_t):
 #       python manage.py runserver
 # 2. Navigate to localhost:8000/box/
 #
-#
-# Python SDK at: https://github.com/box/box-python-sdk
-#
 ###
 def index(request):
-    ###
-    # You will need to place your RSA private key in /BoxApps/box/rsakey.pem
-    #
-    # After this auth method the access token will be set.
-    #
-    # Note: JWT does not use refresh tokens
-    ###
-    global authObject
-    authObject = JWTAuth(client_id=client_id,
-        client_secret=client_secret,
-        enterprise_id=eid,
-        rsa_private_key_file_sys_path=os.path.join(os.path.dirname(__file__),'rsakey.pem'),
-        store_tokens=store_tokens)
+    initializeClientAndAuthObjects()
 
-    ### This SDK allows for a custom network object.
-    ### The one used here logs all calls to STDOUT.
-    ### If you don't want the logging, use the line after it.
-    global clientObject
-    clientObject = Client(authObject, network_layer=logging_network.LoggingNetwork())
-    # clientObject = Client(authObject)
-
-    ### Returns the user object for the developer account.
-    ### Will error if the scope is not set to All Users.
-    # me = client.user(user_id='me').get()
-    # print 'user login: ' + me['login']
-
-    # user = clientObject.create_user("Mike Neas")
-    # authObject.authenticate_app_user(user)
-    # root_folder = clientObject.folder(folder_id='0').get()
-    # print 'folder owner: ' + root_folder.owned_by['login']
-    # print 'folder name: ' + root_folder['name']
+    ### Use this to create users (for now)
+    # user = clientObject.create_user("Daniel Kaplan")
 
     context={
-        "users_list":listUsersWorkaround(clientObject)
-        ### If you get an error about response.entries
-        ### either change the scope of the app in Box
-        ### or use this line instead:
-        # "users_list":clientObject.users()
+        "users_list":jwtAuth.clientObject.users()
     }
-    return render(request, "box/index.html", context) ### Pulls from static/box/
+    return render(request, "box/index.html", context) ### Gets index.html from /box/templates/box/
 
-### NOT COMPLETE
-def OAuth(request):
-    return HttpResponseRedirect(request)
+
+def detail(request, user_id):
+    initializeClientAndAuthObjects()
+
+    u = jwtAuth.clientObject.user(user_id=user_id).get() # Create a user object
+    user_token = jwtAuth.authObject.authenticate_app_user(u) # Auth with that user
+    user_client = Client(jwtAuth.authObject) # Create a new client for that user
+
+    me = user_client.user(user_id='me').get() # Get the user's info
+    print 'Sending detail view for: ' + me['name']
+
+    # print 'user login: ' + me['login']
+
+    context = {
+        "user": jwtAuth.clientObject.user(user_id=user_id).get(),
+        "token": user_token
+    }
+    return render(request, "box/detail.html", context)
+
 
 ### NOT COMPLETE
 def deleteAll(request):
     ### DANGER: CANNOT BE UNDONE
     # print "Delete all App Users"
-    # for u in client.users():
-    #     print u.delete()
+    for u in clientObject.users():
+        print u.delete()
     return HttpResponse("Uncomment the code first.")
+
+
+
 
 

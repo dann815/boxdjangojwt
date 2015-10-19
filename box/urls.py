@@ -4,7 +4,6 @@ from . import views
 
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-
-    url(r'^oauth$', views.OAuth, name='oAuth'),
-    url(r'^deleteAll$', views.deleteAll, name='deleteAll'),
+    url(r'^(?P<user_id>[0-9]+)/detail/$', views.detail, name='detail'),
+    url(r'^appusers/deleteAll$', views.deleteAll, name='deleteAll'),
 ]
