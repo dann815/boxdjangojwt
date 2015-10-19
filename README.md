@@ -1,4 +1,7 @@
-# boxdjangojwt
+# boxdjangojwt  
+Read the comments in the code.  They will help :)  
+Everything important is at /box/views.py  
+
 
 ### Step 0: Pull code  
 git clone https://github.com/dann815/boxdjangojwt.git 
@@ -14,7 +17,8 @@ openssl genrsa -out rsakey.pem 2048
 openssl rsa -pubout -in rsakey.pem -out rsapublic.pem  
 
 ### Step 3: Input your RSA keys  
-Add the public key to your app at developers.box.com  
+cat rsapublic.pem | pbcopy  
+Add the public key to your app at https://developers.box.com/ 
 Put the private key in your project folder at /box/rsakey.pem  
 
 ### Step 4: Set environment variables  
@@ -25,7 +29,17 @@ export BOX_SDK_EID=123456
 
 ### Step 5: Run the code  
 python manage.py runserver  
-Navigate to http://localhost:8000/box/  
-
-#### Box SDK can be found at
+Navigate to 
+<http://localhost:8000/box/> or <http://localhost:8000>  
+  
+  
+  
+Contact: DanK@box.com  
+  
+  
+  
+#### Box SDK can be found at:  
 https://github.com/box/box-python-sdk  
+
+#### Django Tutorial:  
+https://docs.djangoproject.com/en/1.8/intro/tutorial01/  
