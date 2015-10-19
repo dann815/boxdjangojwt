@@ -39,8 +39,10 @@ def index(request):
     ### Use this to create users (for now)
     # user = clientObject.create_user("Daniel Kaplan")
 
+    token = jwtAuth.authObject.authenticate_instance()
     context={
-        "users_list":jwtAuth.clientObject.users()
+        "users_list":jwtAuth.clientObject.users(),
+        "token":token
     }
     return render(request, "box/index.html", context) ### Gets index.html from /box/templates/box/
 
